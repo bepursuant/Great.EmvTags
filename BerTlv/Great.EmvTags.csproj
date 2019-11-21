@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard1.3;net45</TargetFrameworks>
+    <PackageId>Great.EmvTags</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Kevin Klika, Kyle Spearrin</Authors>
+    <Company>Pursuant Solutions</Company>
+    <Product />
+    <Description>EMV Tag Parsing and Management Library. For documentation, visit https://github.com/bepursuant/Great.EmvTags</Description>
+    <PackageTags>ber tlv emv emvtlv bertlv tags</PackageTags>
+    <PackageProjectUrl>https://github.com/bepursuant/Great.EmvTags</PackageProjectUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>
