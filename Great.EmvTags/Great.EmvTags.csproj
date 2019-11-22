@@ -10,7 +10,7 @@
     <Description>EMV Tag Parsing and Management Library. For documentation, visit https://github.com/bepursuant/Great.EmvTags</Description>
     <PackageTags>ber tlv emv emvtlv bertlv tags</PackageTags>
     <PackageProjectUrl>https://github.com/bepursuant/Great.EmvTags</PackageProjectUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
