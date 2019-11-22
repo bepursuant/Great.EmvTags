@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BerTlv\Great.EmvTags.csproj" />
+    <ProjectReference Include="..\Great.EmvTags\Great.EmvTags.csproj" />
   </ItemGroup>
 
 </Project>
