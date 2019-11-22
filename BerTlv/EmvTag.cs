@@ -6,44 +6,49 @@ namespace Great.EmvTags
 {
     public class EmvTag
     {
-        private readonly int _valueOffset;
 
-        public EmvTag(int tag, int length, int valueOffset, byte[] data)
+        public EmvTag(byte[] tag, byte[] length, byte[] value)
         {
             Tag = tag;
             Length = length;
-            Data = data;
+            Value = value;
             Children = new EmvTagList();
-
-            _valueOffset = valueOffset;
         }
 
-        public byte[] Data { get; private set; }
+        public byte[] Tag { get; private set; }
 
-        public string HexData { get { return GetHexString(Data); } }
+        public string HexTag { get { return GetHexString(Tag); } }
 
-        public int Tag { get; private set; }
+        public byte[] Length { get; private set; }
 
-        public string HexTag { get { return Tag.ToString("X"); } }
+        public string HexLength { get { return GetHexString(Length); } }
 
-
-        public int Length { get; private set; }
-
-        public string HexLength { get { return Length.ToString("X"); } }
-
-        public byte[] Value
-        {
-            get
-            {
-                byte[] result = new byte[Length];
-                Array.Copy(Data, _valueOffset, result, 0, Length);
-                return result;
-            }
-        }
+        public byte[] Value { get; private set; }
 
         public string HexValue { get { return GetHexString(Value); } }
 
         public EmvTagList Children { get; set; }
+
+        public EmvTag FindFirst(byte[] tag)
+        {
+            if (tag == null || tag.Length == 0)
+                throw new ArgumentException("tag");
+
+            if (Tag.SequenceEqual(tag))
+                return this;
+
+            if (Children.Any())
+            {
+                foreach (EmvTag t in Children)
+                {
+                    var found = t.FindFirst(tag);
+                    if (found != null)
+                        return found;
+                }
+            }
+
+            return null;
+        }
 
 
         private static string GetHexString(byte[] arr)
