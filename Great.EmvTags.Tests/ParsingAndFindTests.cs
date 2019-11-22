@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Great.EmvTags;
 using Xunit;
 
-namespace Test
+namespace Great.EmvTags.Tests
 {
-    public class TlvTest
+    public class ParsingAndFindTests
     {
         // Verify: http://www.emvlab.org/tlvutils/?data=6F1A840E315041592E5359532E4444463031A5088801025F2D02656E
         private string _validAsciiHexString = "6F1A840E315041592E5359532E4444463031A5088801025F2D02656E";

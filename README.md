@@ -2,25 +2,17 @@
 
 EMV Tag Parsing and Management Library
 
-
-
-## Get It
-
-
-## Use It
-
-First add the using statement:
+## Examples
 
 ```csharp
 using Great.EmvTags;
-```
 
-then:
+// parse input from a string
+var tags = EmvTagList.Parse("6F1A840E315041592E5359532E4444463031A5088801025F2D02656E");
 
-```csharp
-ICollection<Tlv> tlvs = Tlv.ParseTlv("6F1A840E315041592E5359532E4444463031A5088801025F2D02656E");
+// search for a tag
+var tag = tags.FindFirst("5F2D");
 
-// Use the tlvs collection now.
 ```
 
 ## Changelog
