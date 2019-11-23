@@ -32,13 +32,15 @@ namespace Great.EmvTags
             return result;
         }
 
+        public EmvTag FindFirst(byte tag)
+        {
+            return FindFirst(new byte[] { tag });
+        }
 
         public EmvTag FindFirst(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
-            {
                 throw new ArgumentException("tag");
-            }
 
             return FindFirst(GetBytes(tag));
         }
@@ -56,6 +58,37 @@ namespace Great.EmvTags
             }
 
             return null;
+        }
+
+
+        public EmvTagList FindAll(byte tag)
+        {
+            return FindAll(new byte[] { tag });
+        }
+
+        public EmvTagList FindAll(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag))
+                throw new ArgumentException("tag");
+
+            return FindAll(GetBytes(tag));
+        }
+
+        public EmvTagList FindAll(byte[] tag)
+        {
+            if (tag == null || tag.Length == 0)
+                throw new ArgumentException("tag");
+
+            var result = new EmvTagList();
+
+            foreach (EmvTag t in this)
+            {
+                var found = t.FindAll(tag);
+                if (found != null)
+                    result.AddRange(found);
+            }
+
+            return result;
         }
 
         private static void Parse(byte[] rawTlv, EmvTagList result)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
 namespace Great.EmvTags.Tests
 {
@@ -11,10 +8,10 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnTag_OnMatchWithRootTag()
+        public void FindFirst_ShouldLocate_RootTag()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
-            var _6F = tlvs.FindFirst("6F");
+            var _6F = tlvs.FindFirst(0x6F);
 
             Assert.NotNull(_6F);
             Assert.True(_6F.HexTag == "6F");
@@ -22,18 +19,7 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnTag_OnMatchWithFirstLevelChildTag()
-        {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
-            var _84 = tlvs.FindFirst("84");
-
-            Assert.NotNull(_84);
-            Assert.True(_84.HexTag == "84");
-        }
-
-        [Fact]
-        [Trait("Build", "Run")]
-        public void Find_ShouldReturnTag_OnMatchWithConstructedTag()
+        public void FindFirst_ShouldLocate_ConstructedTag()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("A5");
@@ -44,7 +30,18 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnTag_OnMatchWithSecondLevelChildTag()
+        public void FindFirst_ShouldLocate_FirstLevelChildTag()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var _84 = tlvs.FindFirst("84");
+
+            Assert.NotNull(_84);
+            Assert.True(_84.HexTag == "84");
+        }
+
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindFirst_ShouldLocate_SecondLevelChildTag()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("88");
@@ -55,7 +52,7 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnTag_OnMatchWithMultiByteTag()
+        public void FindFirst_ShouldLocate_MultiByteTag()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F2D");
@@ -66,7 +63,7 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnNull_OnNoMatch()
+        public void FindFirst_ShouldReturnNull_OnNoMatch()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F20");
@@ -76,7 +73,7 @@ namespace Great.EmvTags.Tests
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Find_ShouldReturnNull_OnPartialMatchWithMultiByteTag()
+        public void FindFirst_ShouldReturnNull_OnPartialMatchWithMultiByteTag()
         {
             var tlvs = EmvTagList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F");
@@ -84,5 +81,63 @@ namespace Great.EmvTags.Tests
             Assert.Null(_tag);
         }
 
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindAll_ShouldLocate_RootTags()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            tlvs.AddRange(tlvs);
+
+            var _tags = tlvs.FindAll("A5");
+
+            Assert.NotNull(_tags);
+            Assert.True(_tags.Count == 2);
+        }
+
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindAll_ShouldLocate_FirstLevelChildTags()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            tlvs.AddRange(tlvs);
+
+            var _tags = tlvs.FindAll(0x84);
+
+            Assert.NotNull(_tags);
+            Assert.True(_tags.Count == 2);
+        }
+
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindAll_ShouldLocate_SecondLevelChildTags()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            tlvs.AddRange(tlvs);
+
+            var _tags = tlvs.FindAll(0x88);
+
+            Assert.NotNull(_tags);
+            Assert.True(_tags.Count == 2);
+        }
+
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindAll_ShouldReturnEmptyList_OnNoMatch()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var _tag = tlvs.FindAll("5F20");
+
+            Assert.Empty(_tag);
+        }
+
+        [Fact]
+        [Trait("Build", "Run")]
+        public void FindAll_ShouldReturnEmptyList_OnPartialMatchWithMultiByteTag()
+        {
+            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var _tag = tlvs.FindAll("5F");
+
+            Assert.Empty(_tag);
+        }
     }
 }

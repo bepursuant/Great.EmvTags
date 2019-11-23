@@ -8,10 +8,13 @@ EMV Tag Parsing and Management Library
 using Great.EmvTags;
 
 // parse input from a string
-var tags = EmvTagList.Parse("6F1A840E315041592E5359532E4444463031A5088801025F2D02656E");
+EmvTagList tags = EmvTagList.Parse("6F1A840E315041592E5359532E4444463031A5088801025F2D02656E");
 
-// search for a tag
-var tag = tags.FindFirst("5F2D");
+// search for a single tag
+EmvTag _tag = tags.FindFirst("5F2D");
+
+// search for multiple tags
+EmvTagList _tags = tags.Findall("5F2D");
 
 ```
 
@@ -20,6 +23,7 @@ var tag = tags.FindFirst("5F2D");
 ### 1.1.0
 
 - Fixes #1 - Incorrect Parsing of Multi-Byte Length Tags
+- Closes #2 - Enhancements to Find Functionality
 
 ### 1.0.0
 

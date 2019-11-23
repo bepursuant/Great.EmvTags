@@ -50,6 +50,29 @@ namespace Great.EmvTags
             return null;
         }
 
+        public EmvTagList FindAll(byte[] tag)
+        {
+            if (tag == null || tag.Length == 0)
+                throw new ArgumentException("tag");
+
+            var result = new EmvTagList();
+
+            if (Tag.SequenceEqual(tag))
+                result.Add(this);
+
+            if (Children.Any())
+            {
+                foreach (EmvTag t in Children)
+                {
+                    var found = t.FindAll(tag);
+                    if (found != null)
+                        result.AddRange(found);
+                }
+            }
+
+            return result;
+        }
+
 
         private static string GetHexString(byte[] arr)
         {
