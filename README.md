@@ -24,6 +24,7 @@ EmvTagList _tags = tags.Findall("5F2D");
 
 - Fixes #1 - Incorrect Parsing of Multi-Byte Length Tags
 - Closes #2 - Enhancements to Find Functionality
+- Closes #3 - Add Integer Length Property
 
 ### 1.0.0
 

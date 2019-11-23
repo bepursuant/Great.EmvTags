@@ -23,6 +23,8 @@ namespace Great.EmvTags
 
         public string HexLength { get { return GetHexString(Length); } }
 
+        public int IntLength { get { return Length.Length; } }
+
         public byte[] Value { get; private set; }
 
         public string HexValue { get { return GetHexString(Value); } }
