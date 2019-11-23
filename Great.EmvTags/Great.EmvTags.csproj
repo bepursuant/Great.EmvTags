@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard1.3;net45</TargetFrameworks>
     <PackageId>Great.EmvTags</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Kevin Klika, Kyle Spearrin</Authors>
+    <Version>1.1.0</Version>
+    <Authors>Pursuant Solutions</Authors>
     <Company>Pursuant Solutions</Company>
     <Product />
     <Description>EMV Tag Parsing and Management Library. For documentation, visit https://github.com/bepursuant/Great.EmvTags</Description>

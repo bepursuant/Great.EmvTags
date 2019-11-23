@@ -17,6 +17,10 @@ var tag = tags.FindFirst("5F2D");
 
 ## Changelog
 
+### 1.1.0
+
+- Fixes #1 - Incorrect Parsing of Multi-Byte Length Tags
+
 ### 1.0.0
 
 Initial release, based on BerTlv.NET library by Kyle Spearrin

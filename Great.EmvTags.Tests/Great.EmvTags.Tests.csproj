@@ -5,11 +5,13 @@
 
     <IsPackable>false</IsPackable>
 
-    <Authors>Kevin Klika, Kyle Spearrin</Authors>
+    <Authors>Pursuant Solutions</Authors>
 
     <Company>Pursuant Solutions</Company>
 
     <PackageProjectUrl>https://github.com/bepursuant/Great.EmvTags</PackageProjectUrl>
+
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

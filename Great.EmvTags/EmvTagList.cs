@@ -60,79 +60,57 @@ namespace Great.EmvTags
 
         private static void Parse(byte[] rawTlv, EmvTagList result)
         {
+            // `start` and `i` represent cursors along our TLV data. We will move start
+            // along until we find the start byte of our tag, length, or value. then
+            // we will move i along until we find the end of it. Using their positions
+            // we then extract that data, and push them forward one step to look for our
+            // next tag, length, or value.
+
+            // rawTlv: PPTTLLLVVVVVVVVPP
+            //  start:     ^
+            //      i:       ^
+
             for (int i = 0, start = 0; i < rawTlv.Length; start = i)
             {
 
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i: ^
-                ////  start: ^
-
-                // 0x00 and 0xFF can be used as padding before, between, and after tags
-                if (rawTlv[i] == 0x00)
+                // 0x00 can be used as padding before, between, and after tags
+                if (IsNullByte(rawTlv[i]))
                 {
                     i++;
                     continue;
                 }
 
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i:   ^
-                ////  start:   ^
-
-                // get tag meta-data (type of tag, and if it is multi-byte)
-                // if the tag is multiByte, advance i until we get to the last byte of the tag
-                bool constructedTag = (rawTlv[i] & 0x20) != 0;
-                bool multiByteTag = (rawTlv[i] & 0x1F) == 0x1F;
-                while (multiByteTag && (rawTlv[++i] & 0x80) != 0) ;
-                int lengthOfTag = (i + 1) - start;
-
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i:    ^
-                ////  start:   ^
-
 
                 // RETRIEVE TAG
+                if (IsMultiByteTag(rawTlv[i]))
+                {
+                    while (!IsLastTagByte(rawTlv[++i])) ;
+                }
+
+                int lengthOfTag = (i - start) + 1;
                 byte[] tag = new byte[lengthOfTag];
                 Array.Copy(rawTlv, start, tag, 0, lengthOfTag);
+                start = ++i;
 
-                // move past tag bytes
-                i += 1;
-                start = i;
-
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i:     ^
-                ////  start:     ^
-
-                // bit8 being 1 indicates that the length is multiple bytes long
-                bool multiByteLength = (rawTlv[i] & 0x80) != 0;
-                int lengthOfLength = multiByteLength ? rawTlv[i] & 0x1F : 1;
 
                 // RETRIEVE LENGTH
+                if (IsMultiByteLength(rawTlv[i]))
+                {
+                    start++;
+                    i += rawTlv[i] - 0x80;
+                }
+
+                int lengthOfLength = (i - start) + 1;
                 byte[] length = new byte[lengthOfLength];
                 Array.Copy(rawTlv, start, length, 0, lengthOfLength);
+                start = ++i;
 
-                // move past length bytes
-                i += lengthOfLength;
-                start = i;
-
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i:       ^
-                ////  start:       ^
-
-                // now that we know the start position and length of the data, retrieve it
-                // then create the Tlv object and add it to the list
-                int lengthOfValue = GetInt(length, 0, length.Length);
 
                 // RETRIEVE VALUE
+                int lengthOfValue = GetInt(length, 0, length.Length);
                 byte[] value = new byte[lengthOfValue];
                 Array.Copy(rawTlv, start, value, 0, lengthOfValue);
-
-                // move past value bytes
-                i += lengthOfValue;
-                start = i;
-
-                //// rawTlv: PPTTLLVVVVVVVVV
-                ////      i:                ^
-                ////  start:                ^
+                start = (i += lengthOfValue);
 
 
                 // build the tag!
@@ -140,12 +118,22 @@ namespace Great.EmvTags
                 result.Add(tlv);
 
                 // if this was a constructed tag, parse its value into individual Tlv children as well
-                if (constructedTag)
+                if (IsConstructedTag(tag[0]))
                 {
                     Parse(tlv.Value, tlv.Children);
                 }
             }
         }
+
+        private static bool IsMultiByteLength(byte v) => (v & 0x80) != 0;
+
+        private static bool IsLastTagByte(byte v) => (v & 0x80) == 0;
+
+        private static bool IsMultiByteTag(byte v) => (v & 0x1F) == 0x1F;
+
+        private static bool IsConstructedTag(byte v) => (v & 0x20) != 0;
+
+        private static bool IsNullByte(byte v) => v == 0x00;
 
         private static byte[] GetBytes(string hexString)
         {
