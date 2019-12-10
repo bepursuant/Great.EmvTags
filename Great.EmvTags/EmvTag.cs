@@ -105,14 +105,14 @@ namespace Great.EmvTags
             return sb.ToString();
         }
 
-        private static EmvTag Parse(byte[] data)
+        public static EmvTag Parse(byte[] data)
         {
             var tl = EmvTagList.Parse(data);
 
             if (tl.Count > 0)
                 return tl.First();
             else
-                return null;
+                return default;
         }
     }
 }
