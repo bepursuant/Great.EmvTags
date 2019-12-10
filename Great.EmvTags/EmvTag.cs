@@ -31,6 +31,11 @@ namespace Great.EmvTags
 
         public EmvTagList Children { get; set; }
 
+        public EmvTag FindFirst(string tag)
+        {
+            return FindFirst(GetBytes(tag));
+        }
+
         public EmvTag FindFirst(byte[] tag)
         {
             if (tag == null || tag.Length == 0)
@@ -50,6 +55,11 @@ namespace Great.EmvTags
             }
 
             return null;
+        }
+
+        public EmvTagList FindAll(string tag)
+        {
+            return FindAll(GetBytes(tag));
         }
 
         public EmvTagList FindAll(byte[] tag)
@@ -75,6 +85,14 @@ namespace Great.EmvTags
             return result;
         }
 
+        private static byte[] GetBytes(string hexString)
+        {
+            return Enumerable
+                .Range(0, hexString.Length)
+                .Where(x => x % 2 == 0)
+                .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
+                .ToArray();
+        }
 
         private static string GetHexString(byte[] arr)
         {
