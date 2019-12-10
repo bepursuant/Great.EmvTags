@@ -1,0 +1,1 @@
+dotnet pack Great.EmvTags\Great.EmvTags.csproj -o dist
