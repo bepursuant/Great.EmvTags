@@ -16,7 +16,7 @@ namespace Great.EmvTags
                 throw new ArgumentException("tlv");
             }
 
-            return Parse(GetBytes(tlv));
+            return Parse(tlv.HexStringToByteArray());
         }
 
         public static EmvTagList Parse(byte[] tlv)
@@ -42,7 +42,7 @@ namespace Great.EmvTags
             if (string.IsNullOrWhiteSpace(tag))
                 throw new ArgumentException("tag");
 
-            return FindFirst(GetBytes(tag));
+            return FindFirst(tag.HexStringToByteArray());
         }
 
         public EmvTag FindFirst(byte[] tag)
@@ -71,7 +71,7 @@ namespace Great.EmvTags
             if (string.IsNullOrWhiteSpace(tag))
                 throw new ArgumentException("tag");
 
-            return FindAll(GetBytes(tag));
+            return FindAll(tag.HexStringToByteArray());
         }
 
         public EmvTagList FindAll(byte[] tag)
@@ -107,7 +107,7 @@ namespace Great.EmvTags
             {
 
                 // 0x00 can be used as padding before, between, and after tags
-                if (IsNullByte(rawTlv[i]))
+                if (rawTlv[i].IsNullByte())
                 {
                     i++;
                     continue;
@@ -115,9 +115,9 @@ namespace Great.EmvTags
 
 
                 // RETRIEVE TAG
-                if (IsMultiByteTag(rawTlv[i]))
+                if (rawTlv[i].IsMultiByteTag())
                 {
-                    while (!IsLastTagByte(rawTlv[++i])) ;
+                    while (!rawTlv[++i].IsLastTagByte()) ;
                 }
 
                 int lengthOfTag = (i - start) + 1;
@@ -127,7 +127,7 @@ namespace Great.EmvTags
 
 
                 // RETRIEVE LENGTH
-                if (IsMultiByteLength(rawTlv[i]))
+                if (rawTlv[i].IsMultiByteLength())
                 {
                     start++;
                     i += rawTlv[i] - 0x80;
@@ -140,52 +140,22 @@ namespace Great.EmvTags
 
 
                 // RETRIEVE VALUE
-                int lengthOfValue = GetInt(length, 0, length.Length);
+                int lengthOfValue = length.ByteArrayToInt();
                 byte[] value = new byte[lengthOfValue];
                 Array.Copy(rawTlv, start, value, 0, lengthOfValue);
                 start = (i += lengthOfValue);
 
 
                 // build the tag!
-                var tlv = new EmvTag(tag, length, value);
+                var tlv = new EmvTag(tag, value);
                 result.Add(tlv);
 
                 // if this was a constructed tag, parse its value into individual Tlv children as well
-                if (IsConstructedTag(tag[0]))
+                if (tag[0].IsConstructedTag())
                 {
-                    Parse(tlv.Value, tlv.Children);
+                    Parse(tlv.ValueBytes, tlv.Children);
                 }
             }
-        }
-
-        private static bool IsMultiByteLength(byte v) => (v & 0x80) != 0;
-
-        private static bool IsLastTagByte(byte v) => (v & 0x80) == 0;
-
-        private static bool IsMultiByteTag(byte v) => (v & 0x1F) == 0x1F;
-
-        private static bool IsConstructedTag(byte v) => (v & 0x20) != 0;
-
-        private static bool IsNullByte(byte v) => v == 0x00;
-
-        private static byte[] GetBytes(string hexString)
-        {
-            return Enumerable
-                .Range(0, hexString.Length)
-                .Where(x => x % 2 == 0)
-                .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
-                .ToArray();
-        }
-
-        private static int GetInt(byte[] data, int offset, int length)
-        {
-            var result = 0;
-            for (var i = 0; i < length; i++)
-            {
-                result = (result << 8) | data[offset + i];
-            }
-
-            return result;
         }
     }
 }

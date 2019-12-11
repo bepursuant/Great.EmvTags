@@ -14,7 +14,7 @@ namespace Great.EmvTags.Tests
             var _6F = tlvs.FindFirst(0x6F);
 
             Assert.NotNull(_6F);
-            Assert.True(_6F.HexTag == "6F");
+            Assert.True(_6F.TagHex == "6F");
         }
 
         [Fact]
@@ -25,7 +25,7 @@ namespace Great.EmvTags.Tests
             var _tag = tlvs.FindFirst("A5");
 
             Assert.NotNull(_tag);
-            Assert.True(_tag.HexTag == "A5");
+            Assert.True(_tag.TagHex == "A5");
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Great.EmvTags.Tests
             var _84 = tlvs.FindFirst("84");
 
             Assert.NotNull(_84);
-            Assert.True(_84.HexTag == "84");
+            Assert.True(_84.TagHex == "84");
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Great.EmvTags.Tests
             var _tag = tlvs.FindFirst("88");
 
             Assert.NotNull(_tag);
-            Assert.True(_tag.HexTag == "88");
+            Assert.True(_tag.TagHex == "88");
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Great.EmvTags.Tests
             var _tag = tlvs.FindFirst("5F2D");
 
             Assert.NotNull(_tag);
-            Assert.True(_tag.HexTag == "5F2D");
+            Assert.True(_tag.TagHex == "5F2D");
         }
 
         [Fact]

@@ -80,36 +80,36 @@ namespace Great.EmvTags.Tests
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
-            Assert.True(tlvs[0].HexTag == "9A");
-            Assert.True(tlvs[0].HexLength == "03");
-            Assert.True(tlvs[0].HexValue == "191122");
+            Assert.True(tlvs[0].TagHex == "9A");
+            Assert.True(tlvs[0].LengthInt == 3);
+            Assert.True(tlvs[0].ValueHex == "191122");
         }
 
         private static void AssertPrimitiveMultiByteTag(EmvTagList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
-            Assert.True(tlvs[0].HexTag == "5F34");
-            Assert.True(tlvs[0].HexLength == "01");
-            Assert.True(tlvs[0].HexValue == "12");
+            Assert.True(tlvs[0].TagHex == "5F34");
+            Assert.True(tlvs[0].LengthInt == 1);
+            Assert.True(tlvs[0].ValueHex == "12");
         }
 
         private static void AssertPrimitiveExtendedTag(EmvTagList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
-            Assert.True(tlvs[0].HexTag == "90");
-            Assert.True(tlvs[0].HexLength == "C0");
-            Assert.True(tlvs[0].HexValue == "1DE9604518D266B23721DBDDBB71CFE21003EFD717324E3B02749EDCA5901CBBFBB1A834594BDA2F3597A0345385E7587051D8350B4F7EFC2913609B855F00F2FEFB161D91A981D65609BE043F36F753011AD7B39956B7FAC1B154787A713F76C289DBDCACE3E3A3643AD7799F391D93124FD89F3D5CB325140B85FB6158315F91AE65C259C3AD19AAEB851270167E078D99A8E364ED12E4B4C7D4F30E38DF6D19CC8756472D12EBC38B6446EF544C626347B15D41DD88A7F61E3970CF6CDE5F");
+            Assert.True(tlvs[0].TagHex == "90");
+            Assert.True(tlvs[0].LengthInt == 192);
+            Assert.True(tlvs[0].ValueHex == "1DE9604518D266B23721DBDDBB71CFE21003EFD717324E3B02749EDCA5901CBBFBB1A834594BDA2F3597A0345385E7587051D8350B4F7EFC2913609B855F00F2FEFB161D91A981D65609BE043F36F753011AD7B39956B7FAC1B154787A713F76C289DBDCACE3E3A3643AD7799F391D93124FD89F3D5CB325140B85FB6158315F91AE65C259C3AD19AAEB851270167E078D99A8E364ED12E4B4C7D4F30E38DF6D19CC8756472D12EBC38B6446EF544C626347B15D41DD88A7F61E3970CF6CDE5F");
         }
 
         private static void AssertPrimitiveMultiByteExtendedTag(EmvTagList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
-            Assert.True(tlvs[0].HexTag == "5F50");
-            Assert.True(tlvs[0].HexLength == "2B");
-            Assert.True(tlvs[0].HexValue == "68747470733A2F2F6769746875622E636F6D2F62657075727375616E742F47726561742E456D7654616773");
+            Assert.True(tlvs[0].TagHex == "5F50");
+            Assert.True(tlvs[0].LengthInt == 43);
+            Assert.True(tlvs[0].ValueHex == "68747470733A2F2F6769746875622E636F6D2F62657075727375616E742F47726561742E456D7654616773");
         }
 
     }

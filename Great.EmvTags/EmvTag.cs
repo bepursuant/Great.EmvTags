@@ -1,39 +1,130 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Great.EmvTags
 {
     public class EmvTag
     {
-
-        public EmvTag(byte[] tag, byte[] length, byte[] value)
-        {
-            Tag = tag;
-            Length = length;
-            Value = value;
-            Children = new EmvTagList();
-        }
-
-        public byte[] Tag { get; private set; }
-
-        public string HexTag { get { return GetHexString(Tag); } }
-
-        public byte[] Length { get; private set; }
-
-        public string HexLength { get { return GetHexString(Length); } }
-
-        public int IntLength { get { return Length.Length; } }
-
-        public byte[] Value { get; private set; }
-
-        public string HexValue { get { return GetHexString(Value); } }
+        private byte[] tagBytes;
+        private byte[] valueBytes;
 
         public EmvTagList Children { get; set; }
 
+
+
+        public EmvTag()
+        {
+            tagBytes = new byte[] { };
+            valueBytes = new byte[] { };
+            Children = new EmvTagList();
+        }
+
+        public EmvTag(byte[] tag, byte[] value)
+        {
+            tagBytes = tag;
+            valueBytes = value;
+            Children = new EmvTagList();
+        }
+
+
+        public byte[] TagBytes 
+        { 
+            get => tagBytes; 
+            set => SetTag(value); 
+        }
+
+        public byte[] LengthBytes 
+        { 
+            get => GetLengthBytes(); 
+            set => SetLength(value); 
+        }
+
+        public byte[] ValueBytes 
+        { 
+            get => valueBytes; 
+            set => SetValue(value);
+        }
+
+
+        public string TagHex
+        {
+            get => TagBytes.ByteArrayToHexString();
+            set => SetTag(value);
+        }
+
+        public string LengthHex
+        {
+            get => LengthBytes.ByteArrayToHexString();
+            set => SetLength(value);
+        }
+
+        public string ValueHex 
+        { 
+            get => ValueBytes.ByteArrayToHexString(); 
+            set => SetValue(value); 
+        }
+
+
+        public int LengthInt
+        {
+            get => ValueBytes.Length;
+            set => SetLength(value);
+        }
+
+        public string ValueAscii
+        {
+            get => ValueBytes.ByteArrayToAsciiString();
+        }
+
+
+
+        public void SetTag(string tag) => SetTag(tag.HexStringToByteArray());
+        public void SetTag(byte tag) => SetTag(new byte[] { tag });
+        public void SetTag(byte[] tag) => tagBytes = tag;
+
+        public void SetLength(string length) => SetLength(length.HexStringToByteArray()); // WONT WORK!
+        public void SetLength(byte length) => SetLength(new byte[] { length });
+        public void SetLength(byte[] length)
+        {
+            //SetLength(length.ByteArrayToInt()); // WONT WORK!
+
+            // short length
+            if (length.Length == 1)
+            {
+                SetLength((int)length[0]);
+                return;
+            }
+            
+            // multi byte length
+            if((length[0] & 0x80) != 0)
+            {
+                int lengthOfLength = length[0] - 0x80;
+
+                // make sure we have all the bytes we need
+                if (length.Length != lengthOfLength + 1)
+                    throw new Exception($"Length specified {lengthOfLength} bytes but actually had {length.Length + 1}");
+
+                byte[] l = new byte[lengthOfLength];
+                Array.Copy(length, 1, l, 0, lengthOfLength);
+                SetLength(l.ByteArrayToInt());
+                return;
+            }
+
+            throw new Exception($"Invalid Length Specification: {length.ByteArrayToHexString()}");
+            
+        }
+        public void SetLength(int length) => Array.Resize(ref valueBytes, length);
+
+        public void SetValue(string value) => SetValue(value.HexStringToByteArray());
+        public void SetValue(byte value) => SetValue(new byte[] { value });
+        public void SetValue(byte[] value) => valueBytes = value;
+
+
+
         public EmvTag FindFirst(string tag)
         {
-            return FindFirst(GetBytes(tag));
+            return FindFirst(tag.HexStringToByteArray());
         }
 
         public EmvTag FindFirst(byte[] tag)
@@ -41,7 +132,7 @@ namespace Great.EmvTags
             if (tag == null || tag.Length == 0)
                 throw new ArgumentException("tag");
 
-            if (Tag.SequenceEqual(tag))
+            if (TagBytes.SequenceEqual(tag))
                 return this;
 
             if (Children.Any())
@@ -59,7 +150,7 @@ namespace Great.EmvTags
 
         public EmvTagList FindAll(string tag)
         {
-            return FindAll(GetBytes(tag));
+            return FindAll(tag.HexStringToByteArray());
         }
 
         public EmvTagList FindAll(byte[] tag)
@@ -69,7 +160,7 @@ namespace Great.EmvTags
 
             var result = new EmvTagList();
 
-            if (Tag.SequenceEqual(tag))
+            if (TagBytes.SequenceEqual(tag))
                 result.Add(this);
 
             if (Children.Any())
@@ -85,24 +176,46 @@ namespace Great.EmvTags
             return result;
         }
 
-        private static byte[] GetBytes(string hexString)
-        {
-            return Enumerable
-                .Range(0, hexString.Length)
-                .Where(x => x % 2 == 0)
-                .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
-                .ToArray();
-        }
+        
 
-        private static string GetHexString(byte[] arr)
+        private byte[] GetLengthBytes()
         {
-            var sb = new StringBuilder(arr.Length * 2);
-            foreach (byte b in arr)
+            int l = LengthInt;
+
+            // ensure length is in encodable range
+            if (l < 0 || l > 0xffffffff)
+                throw new Exception(string.Format("Invalid length value: {0}", l));
+
+            // use short form if possible
+            if (l <= 0x7f)
+                return new byte[] { checked((byte)l) };
+
+            byte lengthofLen;
+            List<byte> b = new List<byte>();
+
+            // use minimum number of octets
+            if (l <= 0xff)
+                lengthofLen = 1;
+            else if (l <= 0xffff)
+                lengthofLen = 2;
+            else if (l <= 0xffffff)
+                lengthofLen = 3;
+            else if (l <= 0xffffffff)
+                lengthofLen = 4;
+            else
+                throw new Exception(string.Format("Length value too big: {0}", l));
+
+            // initial byte indicating length
+            b.Add((byte)(lengthofLen | 0x80));
+
+            // shift out the bytes
+            for (var i = lengthofLen - 1; i >= 0; i--)
             {
-                sb.AppendFormat("{0:X2}", b);
+                var data = (byte)(l >> (8 * i));
+                b.Add(data);
             }
 
-            return sb.ToString();
+            return b.ToArray();
         }
 
         public static EmvTag Parse(byte[] data)
