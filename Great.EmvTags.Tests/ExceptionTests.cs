@@ -9,14 +9,14 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldThrowException_OnEmptyString()
         {
-            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTagList.Parse(""); });
+            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTlvList.Parse(""); });
         }
 
         [Fact]
         [Trait("Build", "Run")]
         public void Parse_ShouldThrowException_OnEmptyHexArray()
         {
-            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTagList.Parse(new byte[] { }); });
+            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTlvList.Parse(new byte[] { }); });
         }
     }
 }

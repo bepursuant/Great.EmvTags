@@ -4,72 +4,75 @@ using System.Linq;
 
 namespace Great.EmvTags
 {
-    public class EmvTag
+    public class EmvTlv
     {
         private byte[] tagBytes;
         private byte[] valueBytes;
 
-        public EmvTagList Children { get; set; }
+        public EmvTlvList Children { get; set; }
 
 
+        public EmvTlv(byte tag, int length) : this(new byte[] { tag }, length) { }
 
-        public EmvTag()
+        public EmvTlv(byte[] tag, int length)
         {
-            tagBytes = new byte[] { };
-            valueBytes = new byte[] { };
-            Children = new EmvTagList();
+            tagBytes = tag;
+            valueBytes = new byte[length];
+            Children = new EmvTlvList();
         }
 
-        public EmvTag(byte[] tag, byte[] value)
+        public EmvTlv(byte tag, byte[] value) : this(new byte[] { tag }, value) { }
+
+        public EmvTlv(byte[] tag, byte[] value)
         {
             tagBytes = tag;
             valueBytes = value;
-            Children = new EmvTagList();
+            Children = new EmvTlvList();
         }
 
 
         public byte[] TagBytes 
         { 
             get => tagBytes; 
-            set => SetTag(value); 
+            private set => SetTag(value); 
         }
 
         public byte[] LengthBytes 
         { 
             get => GetLengthBytes(); 
-            set => SetLength(value); 
+            private set => SetLength(value); 
         }
 
         public byte[] ValueBytes 
         { 
             get => valueBytes; 
-            set => SetValue(value);
+            private set => SetValue(value);
         }
 
 
         public string TagHex
         {
             get => TagBytes.ByteArrayToHexString();
-            set => SetTag(value);
+            private set => SetTag(value);
         }
 
         public string LengthHex
         {
             get => LengthBytes.ByteArrayToHexString();
-            set => SetLength(value);
+            private set => SetLength(value);
         }
 
         public string ValueHex 
         { 
             get => ValueBytes.ByteArrayToHexString(); 
-            set => SetValue(value); 
+            private set => SetValue(value); 
         }
 
 
         public int LengthInt
         {
             get => ValueBytes.Length;
-            set => SetLength(value);
+            private set => SetLength(value);
         }
 
         public string ValueAscii
@@ -122,12 +125,17 @@ namespace Great.EmvTags
 
 
 
-        public EmvTag FindFirst(string tag)
+        public EmvTlv FindFirst(string tag)
         {
             return FindFirst(tag.HexStringToByteArray());
         }
 
-        public EmvTag FindFirst(byte[] tag)
+        public EmvTlv FindFirst(byte tag)
+        {
+            return FindFirst(new byte[] { tag });
+        }
+
+        public EmvTlv FindFirst(byte[] tag)
         {
             if (tag == null || tag.Length == 0)
                 throw new ArgumentException("tag");
@@ -137,7 +145,7 @@ namespace Great.EmvTags
 
             if (Children.Any())
             {
-                foreach (EmvTag t in Children)
+                foreach (EmvTlv t in Children)
                 {
                     var found = t.FindFirst(tag);
                     if (found != null)
@@ -148,24 +156,29 @@ namespace Great.EmvTags
             return null;
         }
 
-        public EmvTagList FindAll(string tag)
+        public EmvTlvList FindAll(string tag)
         {
             return FindAll(tag.HexStringToByteArray());
         }
 
-        public EmvTagList FindAll(byte[] tag)
+        public EmvTlvList FindAll(byte tag)
+        {
+            return FindAll(new byte[] { tag });
+        }
+
+        public EmvTlvList FindAll(byte[] tag)
         {
             if (tag == null || tag.Length == 0)
                 throw new ArgumentException("tag");
 
-            var result = new EmvTagList();
+            var result = new EmvTlvList();
 
             if (TagBytes.SequenceEqual(tag))
                 result.Add(this);
 
             if (Children.Any())
             {
-                foreach (EmvTag t in Children)
+                foreach (EmvTlv t in Children)
                 {
                     var found = t.FindAll(tag);
                     if (found != null)
@@ -218,9 +231,9 @@ namespace Great.EmvTags
             return b.ToArray();
         }
 
-        public static EmvTag Parse(byte[] data)
+        public static EmvTlv Parse(byte[] data)
         {
-            var tl = EmvTagList.Parse(data);
+            var tl = EmvTlvList.Parse(data);
 
             if (tl.Count > 0)
                 return tl.First();

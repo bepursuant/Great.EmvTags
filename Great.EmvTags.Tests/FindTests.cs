@@ -10,7 +10,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldLocate_RootTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _6F = tlvs.FindFirst(0x6F);
 
             Assert.NotNull(_6F);
@@ -21,7 +21,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldLocate_ConstructedTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("A5");
 
             Assert.NotNull(_tag);
@@ -32,7 +32,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldLocate_FirstLevelChildTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _84 = tlvs.FindFirst("84");
 
             Assert.NotNull(_84);
@@ -43,7 +43,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldLocate_SecondLevelChildTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("88");
 
             Assert.NotNull(_tag);
@@ -54,7 +54,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldLocate_MultiByteTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F2D");
 
             Assert.NotNull(_tag);
@@ -65,7 +65,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldReturnNull_OnNoMatch()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F20");
 
             Assert.Null(_tag);
@@ -75,7 +75,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindFirst_ShouldReturnNull_OnPartialMatchWithMultiByteTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindFirst("5F");
 
             Assert.Null(_tag);
@@ -85,7 +85,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindAll_ShouldLocate_RootTags()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             tlvs.AddRange(tlvs);
 
             var _tags = tlvs.FindAll("A5");
@@ -98,7 +98,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindAll_ShouldLocate_FirstLevelChildTags()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             tlvs.AddRange(tlvs);
 
             var _tags = tlvs.FindAll(0x84);
@@ -111,7 +111,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindAll_ShouldLocate_SecondLevelChildTags()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             tlvs.AddRange(tlvs);
 
             var _tags = tlvs.FindAll(0x88);
@@ -124,7 +124,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindAll_ShouldReturnEmptyList_OnNoMatch()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindAll("5F20");
 
             Assert.Empty(_tag);
@@ -134,7 +134,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void FindAll_ShouldReturnEmptyList_OnPartialMatchWithMultiByteTag()
         {
-            var tlvs = EmvTagList.Parse(_validAsciiHexString);
+            var tlvs = EmvTlvList.Parse(_validAsciiHexString);
             var _tag = tlvs.FindAll("5F");
 
             Assert.Empty(_tag);

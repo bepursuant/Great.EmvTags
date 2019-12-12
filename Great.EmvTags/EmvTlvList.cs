@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Great.EmvTags
 {
-    public class EmvTagList : List<EmvTag>
+    public class EmvTlvList : List<EmvTlv>
     {
 
-        public static EmvTagList Parse(string tlv)
+        public static EmvTlvList Parse(string tlv)
         {
             if (string.IsNullOrWhiteSpace(tlv))
             {
@@ -19,25 +19,25 @@ namespace Great.EmvTags
             return Parse(tlv.HexStringToByteArray());
         }
 
-        public static EmvTagList Parse(byte[] tlv)
+        public static EmvTlvList Parse(byte[] tlv)
         {
             if (tlv == null || tlv.Length == 0)
             {
                 throw new ArgumentException("tlv");
             }
 
-            var result = new EmvTagList();
+            var result = new EmvTlvList();
             Parse(tlv, result);
 
             return result;
         }
 
-        public EmvTag FindFirst(byte tag)
+        public EmvTlv FindFirst(byte tag)
         {
             return FindFirst(new byte[] { tag });
         }
 
-        public EmvTag FindFirst(string tag)
+        public EmvTlv FindFirst(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
                 throw new ArgumentException("tag");
@@ -45,12 +45,12 @@ namespace Great.EmvTags
             return FindFirst(tag.HexStringToByteArray());
         }
 
-        public EmvTag FindFirst(byte[] tag)
+        public EmvTlv FindFirst(byte[] tag)
         {
             if (tag == null || tag.Length == 0)
                 throw new ArgumentException("tag");
 
-            foreach(EmvTag t in this)
+            foreach(EmvTlv t in this)
             {
                 var found = t.FindFirst(tag);
                 if (found != null)
@@ -61,12 +61,12 @@ namespace Great.EmvTags
         }
 
 
-        public EmvTagList FindAll(byte tag)
+        public EmvTlvList FindAll(byte tag)
         {
             return FindAll(new byte[] { tag });
         }
 
-        public EmvTagList FindAll(string tag)
+        public EmvTlvList FindAll(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
                 throw new ArgumentException("tag");
@@ -74,14 +74,14 @@ namespace Great.EmvTags
             return FindAll(tag.HexStringToByteArray());
         }
 
-        public EmvTagList FindAll(byte[] tag)
+        public EmvTlvList FindAll(byte[] tag)
         {
             if (tag == null || tag.Length == 0)
                 throw new ArgumentException("tag");
 
-            var result = new EmvTagList();
+            var result = new EmvTlvList();
 
-            foreach (EmvTag t in this)
+            foreach (EmvTlv t in this)
             {
                 var found = t.FindAll(tag);
                 if (found != null)
@@ -91,7 +91,7 @@ namespace Great.EmvTags
             return result;
         }
 
-        private static void Parse(byte[] rawTlv, EmvTagList result)
+        private static void Parse(byte[] rawTlv, EmvTlvList result)
         {
             // `start` and `i` represent cursors along our TLV data. We will move start
             // along until we find the start byte of our tag, length, or value. then
@@ -147,7 +147,7 @@ namespace Great.EmvTags
 
 
                 // build the tag!
-                var tlv = new EmvTag(tag, value);
+                var tlv = new EmvTlv(tag, value);
                 result.Add(tlv);
 
                 // if this was a constructed tag, parse its value into individual Tlv children as well

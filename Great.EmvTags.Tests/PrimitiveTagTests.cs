@@ -14,7 +14,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveTag()
         {
-            var tlvs = EmvTagList.Parse(_primitiveTag);
+            var tlvs = EmvTlvList.Parse(_primitiveTag);
             AssertPrimitiveTag(tlvs);
         }
 
@@ -22,7 +22,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveTag_WithPadding()
         {
-            var tlvs = EmvTagList.Parse($"0000{_primitiveTag}0000");
+            var tlvs = EmvTlvList.Parse($"0000{_primitiveTag}0000");
             AssertPrimitiveTag(tlvs);
         }
 
@@ -30,7 +30,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveMultiByteTag()
         {
-            var tlvs = EmvTagList.Parse(_primitiveMultiByteTag);
+            var tlvs = EmvTlvList.Parse(_primitiveMultiByteTag);
             AssertPrimitiveMultiByteTag(tlvs);
         }
 
@@ -38,7 +38,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveMultiByteTag_WithPadding()
         {
-            var tlvs = EmvTagList.Parse($"0000{_primitiveMultiByteTag}0000");
+            var tlvs = EmvTlvList.Parse($"0000{_primitiveMultiByteTag}0000");
             AssertPrimitiveMultiByteTag(tlvs);
         }
 
@@ -46,7 +46,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveExtendedTag()
         {
-            var tlvs = EmvTagList.Parse(_primitiveExtendedTag);
+            var tlvs = EmvTlvList.Parse(_primitiveExtendedTag);
             AssertPrimitiveExtendedTag(tlvs);
         }
 
@@ -54,7 +54,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveExtendedTag_WithPadding()
         {
-            var tlvs = EmvTagList.Parse($"0000{_primitiveExtendedTag}0000");
+            var tlvs = EmvTlvList.Parse($"0000{_primitiveExtendedTag}0000");
             AssertPrimitiveExtendedTag(tlvs);
         }
 
@@ -62,7 +62,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveMultiByteExtendedTag()
         {
-            var tlvs = EmvTagList.Parse(_primitiveMultiByteExtendedTag);
+            var tlvs = EmvTlvList.Parse(_primitiveMultiByteExtendedTag);
             AssertPrimitiveMultiByteExtendedTag(tlvs);
         }
 
@@ -70,13 +70,13 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_PrimitiveMultiByteExtendedTag_WithPadding()
         {
-            var tlvs = EmvTagList.Parse($"0000{_primitiveMultiByteExtendedTag}0000");
+            var tlvs = EmvTlvList.Parse($"0000{_primitiveMultiByteExtendedTag}0000");
             AssertPrimitiveMultiByteExtendedTag(tlvs);
         }
 
 
         // Validation Methods
-        private static void AssertPrimitiveTag(EmvTagList tlvs)
+        private static void AssertPrimitiveTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
@@ -85,7 +85,7 @@ namespace Great.EmvTags.Tests
             Assert.True(tlvs[0].ValueHex == "191122");
         }
 
-        private static void AssertPrimitiveMultiByteTag(EmvTagList tlvs)
+        private static void AssertPrimitiveMultiByteTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
@@ -94,7 +94,7 @@ namespace Great.EmvTags.Tests
             Assert.True(tlvs[0].ValueHex == "12");
         }
 
-        private static void AssertPrimitiveExtendedTag(EmvTagList tlvs)
+        private static void AssertPrimitiveExtendedTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
@@ -103,7 +103,7 @@ namespace Great.EmvTags.Tests
             Assert.True(tlvs[0].ValueHex == "1DE9604518D266B23721DBDDBB71CFE21003EFD717324E3B02749EDCA5901CBBFBB1A834594BDA2F3597A0345385E7587051D8350B4F7EFC2913609B855F00F2FEFB161D91A981D65609BE043F36F753011AD7B39956B7FAC1B154787A713F76C289DBDCACE3E3A3643AD7799F391D93124FD89F3D5CB325140B85FB6158315F91AE65C259C3AD19AAEB851270167E078D99A8E364ED12E4B4C7D4F30E38DF6D19CC8756472D12EBC38B6446EF544C626347B15D41DD88A7F61E3970CF6CDE5F");
         }
 
-        private static void AssertPrimitiveMultiByteExtendedTag(EmvTagList tlvs)
+        private static void AssertPrimitiveMultiByteExtendedTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);

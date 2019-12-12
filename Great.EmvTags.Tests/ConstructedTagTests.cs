@@ -13,7 +13,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_ConstructedTag()
         {
-            var tlvs = EmvTagList.Parse(_constructedTag);
+            var tlvs = EmvTlvList.Parse(_constructedTag);
             AssertConstructedTag(tlvs);
         }
 
@@ -21,7 +21,7 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_ConstructedNestedTag()
         {
-            var tlvs = EmvTagList.Parse(_constructedNestedTag);
+            var tlvs = EmvTlvList.Parse(_constructedNestedTag);
             AssertConstructedNestedTag(tlvs);
         }
 
@@ -29,11 +29,11 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Parse_ShouldHandle_ConstructedNestedTagWithPadding()
         {
-            var tlvs = EmvTagList.Parse(_constructedNestedTagWithPadding);
+            var tlvs = EmvTlvList.Parse(_constructedNestedTagWithPadding);
             AssertConstructedNestedTagWithPadding(tlvs);
         }
 
-        private static void AssertConstructedTag(EmvTagList tlvs)
+        private static void AssertConstructedTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
@@ -52,7 +52,7 @@ namespace Great.EmvTags.Tests
             Assert.True(tlvs[0].Children[1].ValueHex == "656E");
         }
 
-        private void AssertConstructedNestedTag(EmvTagList tlvs)
+        private void AssertConstructedNestedTag(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
@@ -71,7 +71,7 @@ namespace Great.EmvTags.Tests
             AssertConstructedTag(tlvs[0].Children);
         }
 
-        private void AssertConstructedNestedTagWithPadding(EmvTagList tlvs)
+        private void AssertConstructedNestedTagWithPadding(EmvTlvList tlvs)
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
