@@ -6,18 +6,22 @@ namespace Great.EmvTags
 {
     public class EmvTlv
     {
-        private byte[] tagBytes;
-        private byte[] valueBytes;
-
         public EmvTlvList Children { get; set; }
 
+
+        public EmvTlv()
+        {
+            TagBytes = new byte[] { };
+            ValueBytes = new byte[] { };
+            Children = new EmvTlvList();
+        }
 
         public EmvTlv(byte tag, int length) : this(new byte[] { tag }, length) { }
 
         public EmvTlv(byte[] tag, int length)
         {
-            tagBytes = tag;
-            valueBytes = new byte[length];
+            TagBytes = tag;
+            ValueBytes = new byte[length];
             Children = new EmvTlvList();
         }
 
@@ -25,104 +29,52 @@ namespace Great.EmvTags
 
         public EmvTlv(byte[] tag, byte[] value)
         {
-            tagBytes = tag;
-            valueBytes = value;
+            TagBytes = tag;
+            ValueBytes = value;
             Children = new EmvTlvList();
         }
 
 
-        public byte[] TagBytes 
-        { 
-            get => tagBytes; 
-            private set => SetTag(value); 
-        }
+        public byte[] TagBytes { get; private set; }
 
         public byte[] LengthBytes 
         { 
             get => GetLengthBytes(); 
-            private set => SetLength(value); 
         }
 
-        public byte[] ValueBytes 
-        { 
-            get => valueBytes; 
-            private set => SetValue(value);
-        }
+        public byte[] ValueBytes { get; private set; }
+
+        public ExtendedByteArray Tag { get; }
+        public ExtendedByteArray Length { get => new ExtendedByteArray(GetLengthBytes()); }
+        public ExtendedByteArray Value { get; }
+
 
 
         public string TagHex
         {
             get => TagBytes.ByteArrayToHexString();
-            private set => SetTag(value);
         }
 
         public string LengthHex
         {
             get => LengthBytes.ByteArrayToHexString();
-            private set => SetLength(value);
         }
 
         public string ValueHex 
         { 
             get => ValueBytes.ByteArrayToHexString(); 
-            private set => SetValue(value); 
         }
 
 
         public int LengthInt
         {
             get => ValueBytes.Length;
-            private set => SetLength(value);
         }
 
         public string ValueAscii
         {
             get => ValueBytes.ByteArrayToAsciiString();
         }
-
-
-
-        public void SetTag(string tag) => SetTag(tag.HexStringToByteArray());
-        public void SetTag(byte tag) => SetTag(new byte[] { tag });
-        public void SetTag(byte[] tag) => tagBytes = tag;
-
-        public void SetLength(string length) => SetLength(length.HexStringToByteArray()); // WONT WORK!
-        public void SetLength(byte length) => SetLength(new byte[] { length });
-        public void SetLength(byte[] length)
-        {
-            //SetLength(length.ByteArrayToInt()); // WONT WORK!
-
-            // short length
-            if (length.Length == 1)
-            {
-                SetLength((int)length[0]);
-                return;
-            }
-            
-            // multi byte length
-            if((length[0] & 0x80) != 0)
-            {
-                int lengthOfLength = length[0] - 0x80;
-
-                // make sure we have all the bytes we need
-                if (length.Length != lengthOfLength + 1)
-                    throw new Exception($"Length specified {lengthOfLength} bytes but actually had {length.Length + 1}");
-
-                byte[] l = new byte[lengthOfLength];
-                Array.Copy(length, 1, l, 0, lengthOfLength);
-                SetLength(l.ByteArrayToInt());
-                return;
-            }
-
-            throw new Exception($"Invalid Length Specification: {length.ByteArrayToHexString()}");
-            
-        }
-        public void SetLength(int length) => Array.Resize(ref valueBytes, length);
-
-        public void SetValue(string value) => SetValue(value.HexStringToByteArray());
-        public void SetValue(byte value) => SetValue(new byte[] { value });
-        public void SetValue(byte[] value) => valueBytes = value;
-
 
 
         public EmvTlv FindFirst(string tag)

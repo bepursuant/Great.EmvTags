@@ -7,19 +7,19 @@ namespace Great.EmvTags
 {
     public static class EmvTagExtensions
     {
-        public static byte[] HexStringToByteArray(this string hexString)
+        public static byte[] HexStringToByteArray(this string hexStr)
         {
             return Enumerable
-                .Range(0, hexString.Length)
+                .Range(0, hexStr.Length)
                 .Where(x => x % 2 == 0)
-                .Select(x => Convert.ToByte(hexString.Substring(x, 2), 16))
+                .Select(x => Convert.ToByte(hexStr.Substring(x, 2), 16))
                 .ToArray();
         }
 
-        public static string ByteArrayToHexString(this byte[] arr)
+        public static string ByteArrayToHexString(this byte[] byteArr)
         {
-            var sb = new StringBuilder(arr.Length * 2);
-            foreach (byte b in arr)
+            var sb = new StringBuilder(byteArr.Length * 2);
+            foreach (byte b in byteArr)
             {
                 sb.AppendFormat("{0:X2}", b);
             }
@@ -27,9 +27,14 @@ namespace Great.EmvTags
             return sb.ToString();
         }
 
-        public static string ByteArrayToAsciiString(this byte[] arr)
+        public static byte[] AsciiStringToByteArray(this string asciiStr)
         {
-            return Encoding.ASCII.GetString(arr);
+            return Encoding.ASCII.GetBytes(asciiStr);
+        }
+
+        public static string ByteArrayToAsciiString(this byte[] byteArr)
+        {
+            return Encoding.ASCII.GetString(byteArr);
         }
 
         public static int ByteArrayToInt(this byte[] data)
