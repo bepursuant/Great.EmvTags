@@ -9,31 +9,16 @@ namespace Great.EmvTags
     public class EmvTlvList : List<EmvTlv>
     {
 
-        public static EmvTlvList Parse(string tlv)
+        public static EmvTlvList Parse(ExtendedByteArray data)
         {
-            return Parse(tlv.HexStringToByteArray());
+            return EmvTags.ParseTlvList(data);
         }
 
-        public static EmvTlvList Parse(byte[] tlv)
-        {
-            return EmvTags.ParseTlvList(tlv);
-        }
-
-        public EmvTlv FindFirst(byte tag)
-        {
-            return FindFirst(new byte[] { tag });
-        }
-
-        public EmvTlv FindFirst(string tag)
-        {
-            return FindFirst(tag.HexStringToByteArray());
-        }
-
-        public EmvTlv FindFirst(byte[] tag)
+        public EmvTlv FindFirst(ExtendedByteArray findTag)
         {
             foreach(EmvTlv t in this)
             {
-                var found = t.FindFirst(tag);
+                var found = t.FindFirst(findTag);
                 if (found != null)
                     return found;
             }
@@ -41,24 +26,13 @@ namespace Great.EmvTags
             return null;
         }
 
-
-        public EmvTlvList FindAll(byte tag)
-        {
-            return FindAll(new byte[] { tag });
-        }
-
-        public EmvTlvList FindAll(string tag)
-        {
-            return FindAll(tag.HexStringToByteArray());
-        }
-
-        public EmvTlvList FindAll(byte[] tag)
+        public EmvTlvList FindAll(ExtendedByteArray findTag)
         {
             var result = new EmvTlvList();
 
             foreach (EmvTlv t in this)
             {
-                var found = t.FindAll(tag);
+                var found = t.FindAll(findTag);
                 if (found != null)
                     result.AddRange(found);
             }

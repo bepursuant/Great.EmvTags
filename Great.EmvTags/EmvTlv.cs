@@ -6,100 +6,36 @@ namespace Great.EmvTags
 {
     public class EmvTlv
     {
-        public EmvTlvList Children { get; set; }
-
-
-        public EmvTlv()
+        public EmvTlv(ExtendedByteArray tag, int length)
         {
-            TagBytes = new byte[] { };
-            ValueBytes = new byte[] { };
+            Tag = tag;
+            Value = new ExtendedByteArray(new byte[length]);
             Children = new EmvTlvList();
         }
 
-        public EmvTlv(byte tag, int length) : this(new byte[] { tag }, length) { }
-
-        public EmvTlv(byte[] tag, int length)
-        {
-            TagBytes = tag;
-            ValueBytes = new byte[length];
+        public EmvTlv(ExtendedByteArray tag, ExtendedByteArray value) {
+            Tag = tag;
+            Value = value;
             Children = new EmvTlvList();
         }
-
-        public EmvTlv(byte tag, byte[] value) : this(new byte[] { tag }, value) { }
-
-        public EmvTlv(byte[] tag, byte[] value)
-        {
-            TagBytes = tag;
-            ValueBytes = value;
-            Children = new EmvTlvList();
-        }
-
-
-        public byte[] TagBytes { get; private set; }
-
-        public byte[] LengthBytes 
-        { 
-            get => GetLengthBytes(); 
-        }
-
-        public byte[] ValueBytes { get; private set; }
 
         public ExtendedByteArray Tag { get; }
-        public ExtendedByteArray Length { get => new ExtendedByteArray(GetLengthBytes()); }
+        public int Length { get => Value.Bytes.Length; }
         public ExtendedByteArray Value { get; }
 
+        public EmvTlvList Children { get; }
 
 
-        public string TagHex
+        public EmvTlv FindFirst(ExtendedByteArray findTag)
         {
-            get => TagBytes.ByteArrayToHexString();
-        }
-
-        public string LengthHex
-        {
-            get => LengthBytes.ByteArrayToHexString();
-        }
-
-        public string ValueHex 
-        { 
-            get => ValueBytes.ByteArrayToHexString(); 
-        }
-
-
-        public int LengthInt
-        {
-            get => ValueBytes.Length;
-        }
-
-        public string ValueAscii
-        {
-            get => ValueBytes.ByteArrayToAsciiString();
-        }
-
-
-        public EmvTlv FindFirst(string tag)
-        {
-            return FindFirst(tag.HexStringToByteArray());
-        }
-
-        public EmvTlv FindFirst(byte tag)
-        {
-            return FindFirst(new byte[] { tag });
-        }
-
-        public EmvTlv FindFirst(byte[] tag)
-        {
-            if (tag == null || tag.Length == 0)
-                throw new ArgumentException("tag");
-
-            if (TagBytes.SequenceEqual(tag))
+            if (findTag.Bytes.SequenceEqual(Tag.Bytes))
                 return this;
 
             if (Children.Any())
             {
                 foreach (EmvTlv t in Children)
                 {
-                    var found = t.FindFirst(tag);
+                    var found = t.FindFirst(findTag);
                     if (found != null)
                         return found;
                 }
@@ -108,31 +44,18 @@ namespace Great.EmvTags
             return null;
         }
 
-        public EmvTlvList FindAll(string tag)
+        public EmvTlvList FindAll(ExtendedByteArray findTag)
         {
-            return FindAll(tag.HexStringToByteArray());
-        }
-
-        public EmvTlvList FindAll(byte tag)
-        {
-            return FindAll(new byte[] { tag });
-        }
-
-        public EmvTlvList FindAll(byte[] tag)
-        {
-            if (tag == null || tag.Length == 0)
-                throw new ArgumentException("tag");
-
             var result = new EmvTlvList();
 
-            if (TagBytes.SequenceEqual(tag))
+            if (findTag.Bytes.SequenceEqual(Tag.Bytes))
                 result.Add(this);
 
             if (Children.Any())
             {
                 foreach (EmvTlv t in Children)
                 {
-                    var found = t.FindAll(tag);
+                    var found = t.FindAll(findTag);
                     if (found != null)
                         result.AddRange(found);
                 }
@@ -143,9 +66,9 @@ namespace Great.EmvTags
 
         
 
-        private byte[] GetLengthBytes()
+        public ExtendedByteArray GetLengthBytes()
         {
-            int l = LengthInt;
+            int l = Length;
 
             // ensure length is in encodable range
             if (l < 0 || l > 0xffffffff)
@@ -183,7 +106,7 @@ namespace Great.EmvTags
             return b.ToArray();
         }
 
-        public static EmvTlv Parse(byte[] data)
+        public static EmvTlv Parse(ExtendedByteArray data)
         {
             return EmvTags.ParseTlv(data);
         }

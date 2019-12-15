@@ -37,19 +37,19 @@ namespace Great.EmvTags.Tests
         {
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
-            Assert.True(tlvs[0].TagHex == "A5");
-            Assert.True(tlvs[0].LengthInt == 8);
-            Assert.True(tlvs[0].ValueHex == "8801025F2D02656E");
+            Assert.True(tlvs[0].Tag.Hex == "A5");
+            Assert.True(tlvs[0].Length == 8);
+            Assert.True(tlvs[0].Value.Hex == "8801025F2D02656E");
 
             Assert.NotNull(tlvs[0].Children);
             Assert.True(tlvs[0].Children.Count == 2);
-            Assert.True(tlvs[0].Children[0].TagHex == "88");
-            Assert.True(tlvs[0].Children[0].LengthInt == 1);
-            Assert.True(tlvs[0].Children[0].ValueHex == "02");
+            Assert.True(tlvs[0].Children[0].Tag.Hex == "88");
+            Assert.True(tlvs[0].Children[0].Length == 1);
+            Assert.True(tlvs[0].Children[0].Value.Hex == "02");
 
-            Assert.True(tlvs[0].Children[1].TagHex == "5F2D");
-            Assert.True(tlvs[0].Children[1].LengthInt == 2);
-            Assert.True(tlvs[0].Children[1].ValueHex == "656E");
+            Assert.True(tlvs[0].Children[1].Tag.Hex == "5F2D");
+            Assert.True(tlvs[0].Children[1].Length == 2);
+            Assert.True(tlvs[0].Children[1].Value.Hex == "656E");
         }
 
         private void AssertConstructedNestedTag(EmvTlvList tlvs)
@@ -57,15 +57,15 @@ namespace Great.EmvTags.Tests
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
 
-            Assert.True(tlvs[0].TagHex == "6F");
-            Assert.True(tlvs[0].LengthInt == 26);
-            Assert.True(tlvs[0].ValueHex == "840E315041592E5359532E4444463031A5088801025F2D02656E");
+            Assert.True(tlvs[0].Tag.Hex == "6F");
+            Assert.True(tlvs[0].Length == 26);
+            Assert.True(tlvs[0].Value.Hex == "840E315041592E5359532E4444463031A5088801025F2D02656E");
 
             Assert.NotNull(tlvs[0].Children);
             Assert.True(tlvs[0].Children.Count == 2);
-            Assert.True(tlvs[0].Children[0].TagHex == "84");
-            Assert.True(tlvs[0].Children[0].LengthInt == 14);
-            Assert.True(tlvs[0].Children[0].ValueHex == "315041592E5359532E4444463031");
+            Assert.True(tlvs[0].Children[0].Tag.Hex == "84");
+            Assert.True(tlvs[0].Children[0].Length == 14);
+            Assert.True(tlvs[0].Children[0].Value.Hex == "315041592E5359532E4444463031");
 
             tlvs[0].Children.RemoveAt(0);
             AssertConstructedTag(tlvs[0].Children);
@@ -76,15 +76,15 @@ namespace Great.EmvTags.Tests
             Assert.NotNull(tlvs);
             Assert.True(tlvs.Count == 1);
 
-            Assert.True(tlvs[0].TagHex == "6F");
-            Assert.True(tlvs[0].LengthInt == 29);
-            Assert.True(tlvs[0].ValueHex == "840E315041592E5359532E4444463031000000A5088801025F2D02656E");
+            Assert.True(tlvs[0].Tag.Hex == "6F");
+            Assert.True(tlvs[0].Length == 29);
+            Assert.True(tlvs[0].Value.Hex == "840E315041592E5359532E4444463031000000A5088801025F2D02656E");
 
             Assert.NotNull(tlvs[0].Children);
             Assert.True(tlvs[0].Children.Count == 2);
-            Assert.True(tlvs[0].Children[0].TagHex == "84");
-            Assert.True(tlvs[0].Children[0].LengthInt == 14);
-            Assert.True(tlvs[0].Children[0].ValueHex == "315041592E5359532E4444463031");
+            Assert.True(tlvs[0].Children[0].Tag.Hex == "84");
+            Assert.True(tlvs[0].Children[0].Length == 14);
+            Assert.True(tlvs[0].Children[0].Value.Hex == "315041592E5359532E4444463031");
 
             tlvs[0].Children.RemoveAt(0);
             AssertConstructedTag(tlvs[0].Children);

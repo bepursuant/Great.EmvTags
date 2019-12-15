@@ -8,18 +8,13 @@ namespace Great.EmvTags
     public static class EmvTags
     {
 
-        public static EmvTlvList ParseDol(string rawDol)
-        {
-            return ParseDol(rawDol.HexStringToByteArray());
-        }
-
-        public static EmvTlvList ParseDol(byte[] rawDol)
+        public static EmvTlvList ParseDol(ExtendedByteArray rawDol)
         {
             EmvTlvList result = new EmvTlvList();
             int i = 0;
-            while (i < rawDol.Length && i != -1)
+            while (i < rawDol.Bytes.Length && i != -1)
             {
-                Tuple<int, EmvTlv> t = Parse(rawDol, i, false);
+                Tuple<int, EmvTlv> t = Parse(rawDol.Bytes, i, false);
                 if (t.Item2 != null)
                     result.Add(t.Item2);
 
@@ -28,30 +23,18 @@ namespace Great.EmvTags
             return result;
         }
 
-
-
-        public static EmvTlv ParseTlv(string tlv)
+        public static EmvTlv ParseTlv(ExtendedByteArray rawTlv)
         {
-            return Parse(tlv.HexStringToByteArray()).Item2;
+            return Parse(rawTlv.Bytes).Item2;
         }
 
-        public static EmvTlv ParseTlv(byte[] rawTlv)
-        {
-            return Parse(rawTlv).Item2;
-        }
-
-        public static EmvTlvList ParseTlvList(string tlv)
-        {
-            return ParseTlvList(tlv.HexStringToByteArray());
-        }
-
-        public static EmvTlvList ParseTlvList(byte[] rawTlv)
+        public static EmvTlvList ParseTlvList(ExtendedByteArray rawTlv)
         {
             EmvTlvList result = new EmvTlvList();
             int i = 0;
-            while (i < rawTlv.Length && i != -1)
+            while (i < rawTlv.Bytes.Length && i != -1)
             {
-                Tuple<int, EmvTlv> t = Parse(rawTlv, i);
+                Tuple<int, EmvTlv> t = Parse(rawTlv.Bytes, i);
                 if (t.Item2 != null)
                     result.Add(t.Item2);
 
@@ -124,7 +107,7 @@ namespace Great.EmvTags
                     // if this was a constructed tag, parse its value into individual Tlv children as well
                     if (tag[0].IsConstructedTag())
                     {
-                        tlv.Children = ParseTlvList(tlv.ValueBytes);
+                        tlv.Children.AddRange(ParseTlvList(tlv.Value.Bytes));
                     }
                 } 
                 else
