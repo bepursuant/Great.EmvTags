@@ -233,12 +233,7 @@ namespace Great.EmvTags
 
         public static EmvTlv Parse(byte[] data)
         {
-            var tl = EmvTlvList.Parse(data);
-
-            if (tl.Count > 0)
-                return tl.First();
-            else
-                return default;
+            return EmvTags.ParseTlv(data);
         }
     }
 }
