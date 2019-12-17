@@ -20,6 +20,9 @@ EmvTagList _tags = tags.Findall("5F2D");
 
 ## Changelog
 
+### 2.0.0-beta
+- Revised byte/byte[]/string into an ExtendedByteArray object to simplify all calls - pass any of these types now!
+
 ### 1.1.2
 - Added EmvTag.Parse() method to parse value to a single tag
 - Added FindFirst and FindAll methods that accept string tag inputs

@@ -12,9 +12,6 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Test1()
         {
-            //EmvTlvList a = EmvTags.ParseDol("86025F200F");
-
-            var c = new Foo("05AB", new byte[] { 0x01 }, 0x2D);
 
         }
     }

@@ -43,6 +43,35 @@ namespace Great.EmvTags
             return result;
         }
 
+        //private static ParseResult ParseTag(ref byte[] data, int position = 0)
+        //{
+        //    ParseResult r = new ParseResult();
+
+        //    int start = position;
+        //    int end = position;
+
+        //    // 0x00 can be used as padding before, between, and after tags
+
+        //    while (data[start].IsNullByte())
+        //    {
+        //        end = ++start;
+        //    }
+
+        //    if (data[start].IsMultiByteTag())
+        //    {
+        //        while (!data[++end].IsLastTagByte()) ;
+        //    }
+
+        //    int lengthOfTag = (end - start) + 1;
+        //    byte[] tag = new byte[lengthOfTag];
+        //    Array.Copy(data, start, tag, 0, lengthOfTag);
+
+
+
+        //    return r;
+
+        //}
+
         private static Tuple<int, EmvTlv> Parse(byte[] rawTlv, int offset = 0, bool parseValue = true)
         {
             EmvTlv tlv = null;
