@@ -6,6 +6,12 @@ namespace Great.EmvTags
 {
     public class EmvTlv
     {
+
+        public ExtendedByteArray Tag { get; }
+        public int Length { get => Value.Length; }
+        public ExtendedByteArray Value { get; }
+        public EmvTlvList Children { get; }
+
         public EmvTlv(ExtendedByteArray tag, int length)
         {
             Tag = tag;
@@ -19,16 +25,10 @@ namespace Great.EmvTags
             Children = new EmvTlvList();
         }
 
-        public ExtendedByteArray Tag { get; }
-        public int Length { get => Value.Bytes.Length; }
-        public ExtendedByteArray Value { get; }
-
-        public EmvTlvList Children { get; }
-
 
         public EmvTlv FindFirst(ExtendedByteArray findTag)
         {
-            if (findTag.Bytes.SequenceEqual(Tag.Bytes))
+            if (findTag == Tag)
                 return this;
 
             if (Children.Any())
@@ -48,7 +48,7 @@ namespace Great.EmvTags
         {
             var result = new EmvTlvList();
 
-            if (findTag.Bytes.SequenceEqual(Tag.Bytes))
+            if (findTag == Tag)
                 result.Add(this);
 
             if (Children.Any())
