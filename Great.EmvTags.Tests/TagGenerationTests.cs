@@ -12,7 +12,8 @@ namespace Great.EmvTags.Tests
         [Trait("Build", "Run")]
         public void Test1()
         {
-
+            EmvTlv t = new EmvTlv("9A", "191122");
+            var a = t.Tlv;
         }
     }
 }

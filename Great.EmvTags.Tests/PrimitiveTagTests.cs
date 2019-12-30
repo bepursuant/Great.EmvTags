@@ -16,6 +16,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse(_primitiveTag);
             AssertPrimitiveTag(tlvs);
+            Assert.Equal(_primitiveTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -24,6 +25,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse($"0000{_primitiveTag}0000");
             AssertPrimitiveTag(tlvs);
+            Assert.Equal(_primitiveTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -32,6 +34,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse(_primitiveMultiByteTag);
             AssertPrimitiveMultiByteTag(tlvs);
+            Assert.Equal(_primitiveMultiByteTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -40,6 +43,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse($"0000{_primitiveMultiByteTag}0000");
             AssertPrimitiveMultiByteTag(tlvs);
+            Assert.Equal(_primitiveMultiByteTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -48,6 +52,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse(_primitiveExtendedTag);
             AssertPrimitiveExtendedTag(tlvs);
+            Assert.Equal(_primitiveExtendedTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -56,6 +61,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse($"0000{_primitiveExtendedTag}0000");
             AssertPrimitiveExtendedTag(tlvs);
+            Assert.Equal(_primitiveExtendedTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -64,6 +70,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse(_primitiveMultiByteExtendedTag);
             AssertPrimitiveMultiByteExtendedTag(tlvs);
+            Assert.Equal(_primitiveMultiByteExtendedTag, tlvs.Tlv.Hex);
         }
 
         [Fact]
@@ -72,6 +79,7 @@ namespace Great.EmvTags.Tests
         {
             var tlvs = EmvTlvList.Parse($"0000{_primitiveMultiByteExtendedTag}0000");
             AssertPrimitiveMultiByteExtendedTag(tlvs);
+            Assert.Equal(_primitiveMultiByteExtendedTag, tlvs.Tlv.Hex);
         }
 
 

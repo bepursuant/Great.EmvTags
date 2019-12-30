@@ -12,6 +12,9 @@ namespace Great.EmvTags
         public ExtendedByteArray Value { get; }
         public EmvTlvList Children { get; }
 
+        public ExtendedByteArray Tlv { get => GetTlv(); }
+
+
         public EmvTlv(ExtendedByteArray tag, int length)
         {
             Tag = tag;
@@ -64,7 +67,10 @@ namespace Great.EmvTags
             return result;
         }
 
-        
+        private ExtendedByteArray GetTlv()
+        {
+            return Tag.Bytes.Concat(GetLengthBytes().Bytes).Concat(Value.Bytes).ToArray();
+        }
 
         public ExtendedByteArray GetLengthBytes()
         {
@@ -108,7 +114,7 @@ namespace Great.EmvTags
 
         public static EmvTlv Parse(ExtendedByteArray data)
         {
-            return EmvTags.ParseTlv(data);
+            return EmvTagParser.ParseTlv(data);
         }
     }
 }

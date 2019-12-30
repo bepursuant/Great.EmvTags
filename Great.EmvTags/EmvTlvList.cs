@@ -11,7 +11,21 @@ namespace Great.EmvTags
 
         public static EmvTlvList Parse(ExtendedByteArray data)
         {
-            return EmvTags.ParseTlvList(data);
+            return EmvTagParser.ParseTlvList(data);
+        }
+
+        public ExtendedByteArray Tlv { get => GetTlv(); }
+
+        private ExtendedByteArray GetTlv()
+        {
+            string tlvHex = "";
+
+            foreach (EmvTlv tlv in this)
+            {
+                tlvHex += tlv.Tlv.Hex;
+            }
+
+            return tlvHex;
         }
 
         public EmvTlv FindFirst(ExtendedByteArray findTag)

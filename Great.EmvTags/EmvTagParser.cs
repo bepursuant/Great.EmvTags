@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Great.EmvTags
 {
-    public static class EmvTags
+    public static class EmvTagParser
     {
 
         public static EmvTlvList ParseDol(ExtendedByteArray rawDol)

@@ -7,16 +7,16 @@ namespace Great.EmvTags.Tests
     {
         [Fact]
         [Trait("Build", "Run")]
-        public void Parse_ShouldThrowException_OnEmptyString()
+        public void Parse_ShouldReturnEmptyList_OnEmptyString()
         {
-            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTlvList.Parse(""); });
+            Assert.Empty(EmvTlvList.Parse(""));
         }
 
         [Fact]
         [Trait("Build", "Run")]
-        public void Parse_ShouldThrowException_OnEmptyHexArray()
+        public void Parse_ShouldReturnEmptyList_OnEmptyHexArray()
         {
-            Assert.Throws<ArgumentException>(() => { var tlvs = EmvTlvList.Parse(new byte[] { }); });
+            Assert.Empty(EmvTlvList.Parse(new byte[] { }));
         }
     }
 }
