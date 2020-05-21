@@ -2,14 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Great.EmvTags
 {
-    public class ExtendedByteArray
+    [Serializable]
+    public class ExtendedByteArray : ISerializable
     {
         private byte[] _value;
 
         public byte[] Bytes { get => _value; set => _value = value; }
+
+        [XmlText]
         public string Hex { get => _value.ByteArrayToHexString(); set => _value = value.HexStringToByteArray(); }
         public string Ascii { get => _value.ByteArrayToAsciiString(); set => _value = value.AsciiStringToByteArray(); }
 
@@ -49,6 +54,11 @@ namespace Great.EmvTags
         public override int GetHashCode()
         {
             return _value.GetHashCode();
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Hex", Hex);
         }
 
         public static bool operator ==(ExtendedByteArray lhs, ExtendedByteArray rhs)
