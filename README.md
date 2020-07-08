@@ -20,6 +20,9 @@ EmvTagList _tags = tags.Findall("5F2D");
 
 ## Changelog
 
+### 2.1.0
+- Adds support for XML serialization of EmvTlv and EmvTlvList
+
 ### 2.0.0
 - Revised byte/byte[]/string into an ExtendedByteArray object to simplify all calls - pass any of these types now!
 - Added .Tlv property to EmvTlv and EmvTlvList to generate TLV data for either type

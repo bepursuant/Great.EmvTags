@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <PackageId>Great.EmvTags</PackageId>
-    <Version>2.0.2</Version>
+    <Version>2.1.0</Version>
     <Authors>Pursuant Solutions</Authors>
     <Company>Pursuant Solutions</Company>
     <Product />

@@ -5,16 +5,15 @@ using System.Xml.Serialization;
 
 namespace Great.EmvTags
 {
-    [XmlRoot(ElementName="Tag")]
+    [XmlRoot(ElementName="EmvTlv")]
     public class EmvTlv
     {
-        [XmlIgnore]
+
         public ExtendedByteArray Tag { get; set; }
 
-        [XmlIgnore]
+
         public int Length { get => Value.Length; set { } }
 
-        [XmlIgnore]
         public ExtendedByteArray Value { get; set; }
 
         public EmvTlvList Children { get; set; }
@@ -129,21 +128,6 @@ namespace Great.EmvTags
         public static EmvTlv Parse(ExtendedByteArray data)
         {
             return EmvTagParser.ParseTlv(data);
-        }
-
-
-        [XmlElement(ElementName="Name")]
-        public string XTag
-        {
-            get { return Tag.Hex; }
-            set { }
-        }
-
-        [XmlElement(ElementName="Value")]
-        public string XValue
-        {
-            get { return Value.Hex; }
-            set { }
         }
 
         public bool ShouldSerializeChildren()

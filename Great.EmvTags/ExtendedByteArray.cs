@@ -12,12 +12,16 @@ namespace Great.EmvTags
     {
         private byte[] _value;
 
+        [XmlIgnore]
         public byte[] Bytes { get => _value; set => _value = value; }
 
         [XmlText]
         public string Hex { get => _value.ByteArrayToHexString(); set => _value = value.HexStringToByteArray(); }
+        
+        [XmlIgnore]
         public string Ascii { get => _value.ByteArrayToAsciiString(); set => _value = value.AsciiStringToByteArray(); }
 
+        [XmlIgnore]
         public int Length { get => _value.Length; set { } }
 
         public override string ToString() => Hex;
