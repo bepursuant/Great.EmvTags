@@ -22,14 +22,14 @@ namespace Great.EmvTags.Tests
 
         }
 
-        //[Fact]
-        //[Trait("Build", "Run")]
-        //public void Parse_ShouldHandle_ConstructedNestedTag()
-        //{
-        //    var tlvs = EmvTlvList.Parse(_constructedNestedTag);
-        //    AssertConstructedNestedTag(tlvs);
-        //}
-        /// <summary>
+        [Fact]
+        [Trait("Build", "Run")]
+        public void Serialize_ShouldHandle_ConstructedNestedTag()
+        {
+            var tlvs = EmvTlvList.Parse(_constructedNestedTag);
+
+            string a = tlvs.ObjectToXmlString();
+        }
 
 
     }

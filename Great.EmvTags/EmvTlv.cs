@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace Great.EmvTags
 {
-    [Serializable]
-    public class EmvTlv : ISerializable
+    [XmlRoot(ElementName="Tag")]
+    public class EmvTlv
     {
+        [XmlIgnore]
+        public ExtendedByteArray Tag { get; set; }
 
-        [XmlAttribute]
-        public ExtendedByteArray Tag { get; }
+        [XmlIgnore]
+        public int Length { get => Value.Length; set { } }
 
-        [XmlAttribute]
-        public int Length { get => Value.Length; }
+        [XmlIgnore]
+        public ExtendedByteArray Value { get; set; }
 
-        [XmlText]
-        public ExtendedByteArray Value { get; }
-        public EmvTlvList Children { get; }
+        public EmvTlvList Children { get; set; }
 
-        public ExtendedByteArray Tlv { get => GetTlv(); }
+        [XmlIgnore]
+        public ExtendedByteArray Tlv { get => GetTlv(); set { } }
 
 
         public EmvTlv()
@@ -131,11 +131,24 @@ namespace Great.EmvTags
             return EmvTagParser.ParseTlv(data);
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+
+        [XmlElement(ElementName="Name")]
+        public string XTag
         {
-            info.AddValue("Tag", Tag.Hex);
-            info.AddValue("Length", Length);
-            info.AddValue("Value", Value.Hex);
+            get { return Tag.Hex; }
+            set { }
+        }
+
+        [XmlElement(ElementName="Value")]
+        public string XValue
+        {
+            get { return Value.Hex; }
+            set { }
+        }
+
+        public bool ShouldSerializeChildren()
+        { 
+            return Children != null && Children.Count > 0; 
         }
     }
 }

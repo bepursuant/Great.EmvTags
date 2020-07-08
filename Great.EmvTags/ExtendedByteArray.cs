@@ -18,10 +18,11 @@ namespace Great.EmvTags
         public string Hex { get => _value.ByteArrayToHexString(); set => _value = value.HexStringToByteArray(); }
         public string Ascii { get => _value.ByteArrayToAsciiString(); set => _value = value.AsciiStringToByteArray(); }
 
-        public int Length { get => _value.Length; private set { } }
+        public int Length { get => _value.Length; set { } }
 
         public override string ToString() => Hex;
 
+        public ExtendedByteArray() { }
         public ExtendedByteArray(string val) => Hex = val;
         public ExtendedByteArray(byte val) => Bytes = new byte[] { val };
         public ExtendedByteArray(byte[] val) => Bytes = val;
