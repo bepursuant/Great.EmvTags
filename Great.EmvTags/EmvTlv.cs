@@ -1,19 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace Great.EmvTags
 {
+    [XmlRoot(ElementName="EmvTlv")]
     public class EmvTlv
     {
 
-        public ExtendedByteArray Tag { get; }
-        public int Length { get => Value.Length; }
-        public ExtendedByteArray Value { get; }
-        public EmvTlvList Children { get; }
+        public ExtendedByteArray Tag { get; set; }
 
-        public ExtendedByteArray Tlv { get => GetTlv(); }
 
+        public int Length { get => Value.Length; set { } }
+
+        public ExtendedByteArray Value { get; set; }
+
+        public EmvTlvList Children { get; set; }
+
+        [XmlIgnore]
+        public ExtendedByteArray Tlv { get => GetTlv(); set { } }
+
+
+        public EmvTlv()
+        {
+            Tag = 0;
+            Value = 0;
+        }
 
         public EmvTlv(ExtendedByteArray tag, int length)
         {
@@ -115,6 +128,11 @@ namespace Great.EmvTags
         public static EmvTlv Parse(ExtendedByteArray data)
         {
             return EmvTagParser.ParseTlv(data);
+        }
+
+        public bool ShouldSerializeChildren()
+        { 
+            return Children != null && Children.Count > 0; 
         }
     }
 }
